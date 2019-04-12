@@ -84,7 +84,15 @@ def build_spec(app, loop):
                     route_spec.tags.append(blueprint.name)
 
     paths = {}
+    uris = []
     for uri, route in app.router.routes_all.items():
+
+        # deduplicate across routes that are the same except for trailing slash
+        if uri + '/' in uris:
+            continue
+        else:
+            uris.append(uri)
+
         if uri.startswith("/swagger") or '<file_uri' in uri:
             # TODO: add static flag in sanic routes
             continue
