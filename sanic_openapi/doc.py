@@ -238,6 +238,7 @@ class RouteField(object):
 
 
 route_specs = defaultdict(RouteSpec)
+print(route_specs)
 
 
 def route(summary=None, description=None, consumes=None, produces=None,
