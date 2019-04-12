@@ -9,8 +9,9 @@ from sanic.views import CompositionView
 from .doc import route_specs, RouteSpec, serialize_schema, definitions
 
 import logging
-logger = logging.getLogger('swagger')
-logger.info('In swagger!')
+logging.basicConfig(filename='swagger.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO)
+logging.info('Swagger is logging')
 
 
 blueprint = Blueprint('swagger', url_prefix='swagger')
@@ -90,8 +91,8 @@ def build_spec(app, loop):
     paths = {}
     for uri, route in app.router.routes_all.items():
 
-        logger.info(uri)
-        logger.info(route)
+        logging.info(uri)
+        logging.info(route)
 
         if uri.startswith("/swagger") or '<file_uri' in uri:
             # TODO: add static flag in sanic routes
