@@ -88,9 +88,14 @@ def build_spec(app, loop):
     for uri, route in app.router.routes_all.items():
 
         # deduplicate across routes that are the same except for trailing slash
+        print(uris)
+        print(uri)
+        print(uri + '/')
         if uri + '/' in uris:
+            print('uri already here')
             continue
         else:
+            print('uri not here')
             uris.append(uri)
 
         if uri.startswith("/swagger") or '<file_uri' in uri:
