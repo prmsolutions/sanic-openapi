@@ -1,6 +1,7 @@
 import re
 from itertools import repeat
 import os
+import copy
 
 from sanic.blueprints import Blueprint
 from sanic.response import json, redirect
@@ -83,10 +84,10 @@ def build_spec(app, loop):
                 if not route_spec.tags:
                     route_spec.tags.append(blueprint.name)
 
-    deduplicated_routes = app.router.routes_all
+    deduplicated_routes = copy.deepcopy(app.router.routes_all)
     for uri in deduplicated_routes.keys():
         if uri + '/' in deduplicated_routes:
-            del app.router.deduplicated_routes[uri]
+            del deduplicated_routes[uri]
 
     paths = {}
     for uri, route in deduplicated_routes.items():
