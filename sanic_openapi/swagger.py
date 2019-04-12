@@ -84,13 +84,15 @@ def build_spec(app, loop):
                 if not route_spec.tags:
                     route_spec.tags.append(blueprint.name)
 
-    deduplicated_routes = copy.deepcopy(app.router.routes_all)
-    for uri in deduplicated_routes.keys():
-        if uri + '/' in deduplicated_routes:
-            del deduplicated_routes[uri]
+    # get a list of deduplicated uris for checking later, so we don't have a trailing slash entry
+    # for every route
+    uris = app.router.routes_all.keys()
+    deduplicated_uris = [u for u in app.router.routes_all.keys() if (u + '/') not in uris]
 
     paths = {}
-    for uri, route in deduplicated_routes.items():
+    for uri, route in app.router.routes_all.items():
+        if uri not in deduplicated_uris:
+            continue
         if uri.startswith("/swagger") or '<file_uri' in uri:
             # TODO: add static flag in sanic routes
             continue
