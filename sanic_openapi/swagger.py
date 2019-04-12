@@ -83,21 +83,13 @@ def build_spec(app, loop):
                 if not route_spec.tags:
                     route_spec.tags.append(blueprint.name)
 
+    deduplicated_routes = app.router.routes_all
+    for uri in deduplicated_routes.keys():
+        if uri + '/' in deduplicated_routes:
+            del app.router.deduplicated_routes[uri]
+
     paths = {}
-    uris = []
-    for uri, route in app.router.routes_all.items():
-
-        # deduplicate across routes that are the same except for trailing slash
-        print(uris)
-        print(uri)
-        print(uri + '/')
-        if uri + '/' in uris:
-            print('uri already here')
-            continue
-        else:
-            print('uri not here')
-            uris.append(uri)
-
+    for uri, route in deduplicated_routes.items():
         if uri.startswith("/swagger") or '<file_uri' in uri:
             # TODO: add static flag in sanic routes
             continue
